@@ -1,0 +1,29 @@
+global:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+# Контроллер самый важный, ему дадим чуть больше
+controller:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+# Redis можно сильно ограничить
+redis:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+# Если не используете вход через Google/GitHub, можно вообще выключить Dex
+dex:
+  enabled: false

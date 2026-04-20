@@ -1,0 +1,25 @@
+stages:
+  - release
+
+upload-to-nexus:
+  stage: release
+  image:
+    name: alpine/helm:3.12.0
+    entrypoint: [""]
+  extends:
+    - .setup-ssh
+  script:
+    - cd ./momo-store-charts/frontend
+    - 'echo "Образ фронтенда: $FRONTEND_IMAGE"'
+    - 'echo "Версия приложения: $VERSION"'
+    - yq -i ".version = \"$VERSION\"" Chart.yaml
+    - yq -i ".appVersion = \"$VERSION\"" Chart.yaml
+    - yq -i ".dependencies[0].version = \"$VERSION\"" Chart.yaml
+    - yq -i ".version = \"$VERSION\"" ./charts/frontend/Chart.yaml
+    - yq -i ".global.dockerconfigjson = \"$DOCKER_CONFIG\"" values.yaml
+    - yq -i ".frontend.deployment.image = \"$FRONTEND_IMAGE\"" values.yaml
+    - helm package . --app-version $VERSION
+    - >
+      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}"
+      --upload-file frontend-momo-store-chart-${VERSION}.tgz
+      ${NEXUS_REPO_URL}/repository/${NEXUS_FRONT_REPO_HELM_NAME}/

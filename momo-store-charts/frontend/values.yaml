@@ -1,0 +1,24 @@
+---
+global:
+  dockerconfigjson: ""
+
+frontend:
+  deployment:
+    replicas: 1
+    image: ""
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 0
+        maxSurge: 1
+    resources:
+      requests:
+        cpu: 0.1
+        memory: 256Mi
+      limits:
+        cpu: 0.1
+        memory: 256Mi
+  ingress:
+    subnets: fl8pau1ppoap4tcfrgit
+    host: momostore-std-046-13.ru
+    secretName: yc-certmgr-cert-id-fpqu3rctnmtkbja010e9

@@ -1,0 +1,8 @@
+resources:
+  requests:
+    cpu: 250m
+    memory: 750Mi
+ingress:
+  subnets: fl8pau1ppoap4tcfrgit
+  host: grafana.momostore-std-046-13.ru
+  secretName: yc-certmgr-cert-id-fpqu3rctnmtkbja010e9

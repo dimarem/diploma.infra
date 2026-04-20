@@ -1,0 +1,34 @@
+stages:
+  - module-pipelines
+
+frontend:
+  stage: module-pipelines
+  rules:
+    # FRONTEND_IMAGE и VERSION передаются
+    # родительским пайплайном из проекта std-046-13/momo-store
+    - if: '$FRONTEND_IMAGE && $VERSION'
+      when: on_success
+    - when: never
+  trigger:
+    include:
+      - included.yml
+      - "/momo-store-charts/frontend/.gitlab-ci.yml"
+    strategy: depend
+    forward:
+      pipeline_variables: true
+
+backend:
+  stage: module-pipelines
+  rules:
+    # BACKEND_IMAGE и VERSION передаются
+    # родительским пайплайном из проекта std-046-13/momo-store
+    - if: '$BACKEND_IMAGE && $VERSION'
+      when: on_success
+    - when: never
+  trigger:
+    include:
+      - included.yml
+      - "/momo-store-charts/backend/.gitlab-ci.yml"
+    strategy: depend
+    forward:
+      pipeline_variables: true

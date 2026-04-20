@@ -1,0 +1,22 @@
+---
+global:
+  dockerconfigjson: ""
+
+backend:
+  deployment:
+    image: ""
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 0
+        maxSurge: 1
+    resources:
+      requests:
+        cpu: 0.1
+        memory: 256Mi
+      limits:
+        cpu: 0.1
+        memory: 256Mi
+  hpa:
+    minReplicas: 1
+    maxReplicas: 2

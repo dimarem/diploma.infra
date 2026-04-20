@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: prometheus
+    provider: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        app: prometheus
+      annotations:
+        co.elastic.logs/enabled: "true"
+        co.elastic.logs/format: zap
+        co.elastic.logs/timezone: Europe/Moscow
+        co.elastic.logs/exclude_lines: skipping duplicate scrape target with identical labels;
+    spec:
+      terminationGracePeriodSeconds: 90
+      restartPolicy: Always
+      volumes:
+        - name: timezone-moscow
+          hostPath:
+            path: /usr/share/zoneinfo/Europe/Moscow
+        - name: config
+          configMap:
+            name: prometheus-conf
+      serviceAccountName: prometheus
+      containers:
+        - name: prometheus
+          image: prom/prometheus
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --web.enable-lifecycle
+            - --log.level=debug
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: timezone-moscow
+              mountPath: /etc/localtime
+              readOnly: true
+            - name: config
+              mountPath: /etc/prometheus/
+              readOnly: true
+          {{- if .Values.resources }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end}}

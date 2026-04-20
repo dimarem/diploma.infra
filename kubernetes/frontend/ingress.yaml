@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alb-ingress
+  namespace: diploma
+  annotations:
+    ingress.alb.yc.io/subnets: fl8pau1ppoap4tcfrgit
+    ingress.alb.yc.io/external-ipv4-address: auto
+    ingress.alb.yc.io/group-name: alb-ingress
+spec:
+  tls:
+    - hosts:
+        - momostore-std-046-13.ru
+      secretName: yc-certmgr-cert-id-fpqu3rctnmtkbja010e9
+  rules:
+    - host: momostore-std-046-13.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

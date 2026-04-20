@@ -1,0 +1,11 @@
+apiVersion: v2
+name: frontend-momo-store-chart
+description: A frontend Helm chart for momo store
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+
+dependencies:
+  - name: frontend
+    version: 0.1.0
+    repository: file://charts/frontend

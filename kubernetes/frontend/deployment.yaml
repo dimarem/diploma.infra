@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: diploma
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - image: gitlab.praktikum-services.ru:5050/std-046-13/momo-store/frontend:08a3b955a96d61acc670745898eac698499971f7
+          name: frontend
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: frontend
+              containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /momo-store/index.html
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 5
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 384Mi
+            limits:
+              cpu: 0.5
+              memory: 384Mi
+      imagePullSecrets:
+        - name: docker-secret
+  

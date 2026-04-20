@@ -1,0 +1,5 @@
+apiVersion: v2
+name: promtail
+description: Minimal Promtail chart for diploma project
+version: 0.1.0
+appVersion: "3.0.0"
